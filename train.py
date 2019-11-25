@@ -20,6 +20,8 @@ if __name__ == '__main__':
                             max_len=256)
 
     tweet_model = BertHashtag.from_pretrained('bert-base-uncased')
+    tweet_model = tweet_model.to(device)
+
     loss_func = CrossEntropyLoss(reduction='mean')
 
     optimizer = Adam(tweet_model.parameters(), lr=1e-4)
