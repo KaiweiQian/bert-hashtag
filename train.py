@@ -27,7 +27,7 @@ if __name__ == '__main__':
 
     optimizer = Adam(tweet_model.parameters(), lr=1e-5)
 
-    train_dataloader = DataLoader(train_data, batch_size=16, shuffle=True)
+    train_dataloader = DataLoader(train_data, batch_size=8, shuffle=True)
 
     for epoch in range(n_epoch):
         print('Epoch {} starts!'.format(epoch+1))
