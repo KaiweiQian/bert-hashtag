@@ -9,7 +9,7 @@ from models import BertHashtag
 
 if __name__ == '__main__':
     device = torch.device('cuda:0')
-    n_epoch = 5
+    n_epoch = 20
 
     train_data = TweetDataset(file_path='./data/train.txt',
                               meta_path='./data/meta.txt',
@@ -21,14 +21,16 @@ if __name__ == '__main__':
 
     tweet_model = BertHashtag.from_pretrained('bert-base-uncased')
     tweet_model = tweet_model.to(device)
+    tweet_model.train()
 
     loss_func = CrossEntropyLoss(reduction='mean')
 
-    optimizer = Adam(tweet_model.parameters(), lr=1e-4)
+    optimizer = Adam(tweet_model.parameters(), lr=1e-5)
 
     train_dataloader = DataLoader(train_data, batch_size=16, shuffle=True)
 
     for epoch in range(n_epoch):
+        print('Epoch {} starts!'.format(epoch+1))
         for it, (token_ids, token_type_ids, attn_mask, label) in enumerate(train_dataloader):
             optimizer.zero_grad()
 
@@ -45,4 +47,14 @@ if __name__ == '__main__':
 
             optimizer.step()
 
-            print(loss.item())
+            if (it + 1) % 100 == 0:
+                print('{}-th iteration loss: {}'.format(it+1, loss.item()))
+
+        save_name = 'tweet_model_gpu_checkpoints_epoch_{}.tar'.format(epoch+1)
+
+        torch.save({'epoch': epoch,
+                    'model_state_dict': tweet_model.state_dict(),
+                    'optimizer_state_dict': optimizer.state_dict(),
+                    'loss': loss},
+                   save_name
+                   )
