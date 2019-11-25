@@ -9,6 +9,7 @@ from models import BertHashtag
 
 if __name__ == '__main__':
     device = torch.device('cuda:0')
+    n_epoch = 5
 
     train_data = TweetDataset(file_path='./data/train.txt',
                               meta_path='./data/meta.txt',
@@ -21,22 +22,25 @@ if __name__ == '__main__':
     tweet_model = BertHashtag.from_pretrained('bert-base-uncased')
     loss_func = CrossEntropyLoss(reduction='mean')
 
-    optimizer = Adam(tweet_model.parameters(), lr=5e-4)
+    optimizer = Adam(tweet_model.parameters(), lr=1e-4)
 
-    train_dataloader = DataLoader(train_data, batch_size=32, shuffle=True)
+    train_dataloader = DataLoader(train_data, batch_size=16, shuffle=True)
 
-    for it, (token_ids, token_type_ids, attn_mask, label) in enumerate(train_dataloader):
-        optimizer.zero_grad()
+    for epoch in range(n_epoch):
+        for it, (token_ids, token_type_ids, attn_mask, label) in enumerate(train_dataloader):
+            optimizer.zero_grad()
 
-        token_ids, token_type_ids, attn_mask = token_ids.to(device), token_type_ids.to(device), attn_mask.to(device)
-        label = label.to(device)
+            token_ids, token_type_ids, attn_mask = token_ids.to(device), token_type_ids.to(device), attn_mask.to(device)
+            label = label.to(device)
 
-        score = tweet_model(input_ids=token_ids,
-                            token_type_ids=token_type_ids,
-                            attention_mask=attn_mask
-                            )
+            score = tweet_model(input_ids=token_ids,
+                                token_type_ids=token_type_ids,
+                                attn_mask=attn_mask
+                                )
 
-        loss = loss_func(score, label)
-        loss.backward()
+            loss = loss_func(score, label)
+            loss.backward()
 
-        print(loss.item())
+            optimizer.step()
+
+            print(loss.item())
