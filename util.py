@@ -22,7 +22,7 @@ class TweetDataset(Dataset):
         for i in range(self.n):
             self.data[i] = (idx_data['token_ids'][i],
                             idx_data['token_type_ids'][i],
-                            idx_data['attention_mask'][i],
+                            idx_data['attn_mask'][i],
                             meta[idx_data['label'][i]]
                             )
 
@@ -32,10 +32,10 @@ class TweetDataset(Dataset):
     def __getitem__(self, index):
         token_ids = torch.tensor(self.data[index][0]).long()
         token_type_ids = torch.tensor(self.data[index][1]).long()
-        attention_mask = torch.Tensor(self.data[index][2])
+        attn_mask = torch.Tensor(self.data[index][2])
         label = torch.tensor(self.data[index][3])
 
-        return token_ids, token_type_ids, attention_mask, label
+        return token_ids, token_type_ids, attn_mask, label
 
 
 def create_idx(dict_data, max_len):
@@ -44,7 +44,7 @@ def create_idx(dict_data, max_len):
     output = {'id': dict_data['id'],
               'token_ids': [],
               'token_type_ids': [],
-              'attention_mask': [],
+              'attn_mask': [],
               'label': dict_data['label']
               }
 
@@ -56,13 +56,13 @@ def create_idx(dict_data, max_len):
         if len(sen1) > max_len:
             sen1 = sen1[:(max_len-1)] + ['[SEP]']
         else:
-            sen1 = sen1 + ['[PAD]' for _ in range(max_len - len(tokens))]
+            sen1 = sen1 + ['[PAD]' for _ in range(max_len - len(sen1))]
 
         token_ids = tokenizer.convert_tokens_to_ids(sen1)
-        token_type_ids = tokenizer.create_token_type_ids_from_sequences(token_ids)
-        attention_mask = [0 if elem != 0 else 1 for elem in token_ids]
+        token_type_ids = [0 for _ in range(len(token_ids))]
+        attn_mask = [0 if elem != 0 else 1 for elem in token_ids]
 
         output['token_ids'].append(token_ids)
         output['token_type_ids'].append(token_type_ids)
-        output['attention_mask'].append(attention_mask)
+        output['attn_mask'].append(attn_mask)
     return output
