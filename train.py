@@ -52,7 +52,7 @@ if __name__ == '__main__':
 
         save_name = './checkpoints/tweet_model_gpu_checkpoints_epoch_{}.tar'.format(epoch+1)
 
-        torch.save({'epoch': epoch,
+        torch.save({'epoch': epoch+1,
                     'model_state_dict': tweet_model.state_dict(),
                     'optimizer_state_dict': optimizer.state_dict(),
                     'loss': loss},
