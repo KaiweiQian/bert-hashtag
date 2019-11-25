@@ -38,3 +38,5 @@ if __name__ == '__main__':
 
         loss = loss_func(score, label)
         loss.backward()
+
+        print(loss.item())
