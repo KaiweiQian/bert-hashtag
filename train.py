@@ -1,24 +1,24 @@
 import torch
 
-from json import load
-
+from util import TweetDataset
 from torch.optim import Adam
 from torch.nn import CrossEntropyLoss
-
-from models import BertSquad
-from transformers import BertTokenizer
-
-
-def load_squad_data(file_path):
-    dict_data = load(file_path)
+from torch.utils.data import DataLoader
+from models import BertHashtag
 
 
-bert_type = 'bert-base-uncased'
+if __name__ == '__main__':
+    data = TweetDataset(file_path='./data/train.txt',
+                        meta_path='./data/meta.txt',
+                        max_len=256)
+    tweet_model = BertHashtag.from_pretrained('bert-base-uncased')
+    optimizer = Adam(tweet_model.parameters(), lr=5e-4)
 
+    train_dataloader = DataLoader(data, batch_size=32, shuffle=True)
 
-tokenizer = BertTokenizer.from_pretrained(bert_type)
-
-squad_model = BertSquad.from_pretrained(bert_type)
-optimizer = Adam(squad_model.parameters())
-
-start_score, end_score = squad_model(input_ids=input_ids, token_type_ids=token_type_ids)
+    for it, batch in enumerate(train_dataloader):
+        token_ids, token_type_ids, attention_mask, label = batch
+        logits = tweet_model(input_ids=token_ids,
+                             token_type_ids=token_type_ids,
+                             attention_mask=attention_mask
+                             )
