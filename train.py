@@ -50,7 +50,7 @@ if __name__ == '__main__':
             if (it + 1) % 100 == 0:
                 print('{}-th iteration loss: {}'.format(it+1, loss.item()))
 
-        save_name = 'tweet_model_gpu_checkpoints_epoch_{}.tar'.format(epoch+1)
+        save_name = './checkpoints/tweet_model_gpu_checkpoints_epoch_{}.tar'.format(epoch+1)
 
         torch.save({'epoch': epoch,
                     'model_state_dict': tweet_model.state_dict(),
