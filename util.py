@@ -20,25 +20,25 @@ class TweetDataset(Dataset):
         self.data = {}
 
         for i in range(self.n):
-            self.data[idx_data['id'][i]] = (idx_data['token_ids'][i],
-                                            idx_data['token_type_ids'][i],
-                                            idx_data['attention_mask'][i],
-                                            meta[idx_data['label'][i]]
-                                            )
+            self.data[i] = (idx_data['token_ids'][i],
+                            idx_data['token_type_ids'][i],
+                            idx_data['attention_mask'][i],
+                            meta[idx_data['label'][i]]
+                            )
 
     def __len__(self):
         return self.n
 
     def __getitem__(self, index):
-        token_ids = torch.Tensor(self.data[index][0])
-        token_type_ids = torch.Tensor(self.data[index][1])
+        token_ids = torch.tensor(self.data[index][0]).long()
+        token_type_ids = torch.tensor(self.data[index][1]).long()
         attention_mask = torch.Tensor(self.data[index][2])
-        label = torch.Tensor(self.data[index][3])
+        label = torch.tensor(self.data[index][3])
 
         return token_ids, token_type_ids, attention_mask, label
 
 
-def create_idx(dict_data, max_len=256):
+def create_idx(dict_data, max_len):
     assert len(dict_data['text']) == len(dict_data['label'])
     tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
     output = {'id': dict_data['id'],
@@ -50,11 +50,15 @@ def create_idx(dict_data, max_len=256):
 
     n = len(dict_data['text'])
     for i in range(n):
-        senA = '[CLS] ' + dict_data['text'][i] + ' [SEP]'
+        tokens = tokenizer.tokenize(dict_data['text'][i])
+        sen1 = ['[CLS]'] + tokens + ['[SEP]']
 
-        token_ids = tokenizer.encode(senA)
-        token_ids = token_ids + [0 for _ in range(max_len - len(token_ids))]
+        if len(sen1) > max_len:
+            sen1 = sen1[:(max_len-1)] + ['[SEP]']
+        else:
+            sen1 = sen1 + ['[PAD]' for _ in range(max_len - len(tokens))]
 
+        token_ids = tokenizer.convert_tokens_to_ids(sen1)
         token_type_ids = tokenizer.create_token_type_ids_from_sequences(token_ids)
         attention_mask = [0 if elem != 0 else 1 for elem in token_ids]
 
