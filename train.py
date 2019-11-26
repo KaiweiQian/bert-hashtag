@@ -12,7 +12,7 @@ if __name__ == '__main__':
     PATH = './checkpoints/'
 
     device = torch.device('cuda:0')
-    n_epoch = 50
+    n_epoch = 20
 
     train_data = TweetDataset(file_path='./data/train.txt',
                               meta_path='./data/meta.txt',
@@ -28,11 +28,14 @@ if __name__ == '__main__':
 
     loss_func = CrossEntropyLoss(reduction='mean')
 
-    optimizer = Adam(tweet_model.parameters(), lr=1e-5)
+    lr = 1e-7
+    optimizer = Adam(tweet_model.parameters(), lr=lr)
 
     for epoch in range(n_epoch):
         cum_loss = 0
-        train_dataloader = DataLoader(train_data, batch_size=32, shuffle=True)
+        cum_acc = 0
+
+        train_dataloader = DataLoader(train_data, batch_size=64, shuffle=True)
         print('Epoch {} starts!'.format(epoch+1))
 
         for it, (token_ids, token_type_ids, attn_mask, label) in enumerate(train_dataloader):
@@ -48,15 +51,17 @@ if __name__ == '__main__':
 
             loss = loss_func(score, label)
             loss.backward()
+
             cum_loss += loss.item()
+            cum_acc += torch.mean(torch.argmax(score, dim=1) == label)
 
             optimizer.step()
 
             if (it + 1) % 100 == 0:
-                print('Avg {}-th iteration loss: {}'.format(it+1, cum_loss/100))
+                print('Avg {}-th iteration loss: {} and accuracy: {}'.format(it+1, cum_loss/100, cum_acc/100))
                 cum_loss = 0
 
-        save_name = './checkpoints/tweet_model_gpu_checkpoints_epoch_{}.tar'.format(epoch+1)
+        save_name = './checkpoints/tweet_gpu_checkpoints_lr_{}_epoch_{}.tar'.format(lr, epoch+1)
 
         if (epoch + 1) % 5 == 0:
             torch.save({'epoch': epoch + 1,
