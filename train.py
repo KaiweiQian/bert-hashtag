@@ -15,11 +15,7 @@ if __name__ == '__main__':
                               meta_path='./data/meta.txt',
                               max_len=256)
 
-    dev_data = TweetDataset(file_path='./data/dev.txt',
-                            meta_path='./data/meta.txt',
-                            max_len=256)
-
-    tweet_model = BertHashtag.from_pretrained('bert-base-uncased')
+    tweet_model = BertHashtag()
     tweet_model = tweet_model.to(device)
     tweet_model.train()
 
@@ -27,10 +23,12 @@ if __name__ == '__main__':
 
     optimizer = Adam(tweet_model.parameters(), lr=1e-5)
 
-    train_dataloader = DataLoader(train_data, batch_size=8, shuffle=True)
+    cum_loss = 0
 
     for epoch in range(n_epoch):
+        train_dataloader = DataLoader(train_data, batch_size=8, shuffle=True)
         print('Epoch {} starts!'.format(epoch+1))
+
         for it, (token_ids, token_type_ids, attn_mask, label) in enumerate(train_dataloader):
             optimizer.zero_grad()
 
@@ -44,11 +42,13 @@ if __name__ == '__main__':
 
             loss = loss_func(score, label)
             loss.backward()
+            cum_loss += loss.item()
 
             optimizer.step()
 
             if (it + 1) % 100 == 0:
-                print('{}-th iteration loss: {}'.format(it+1, loss.item()))
+                print('Avg {}-th iteration loss: {}'.format(it+1, cum_loss/100))
+                cum_loss = 0
 
         save_name = './checkpoints/tweet_model_gpu_checkpoints_epoch_{}.tar'.format(epoch+1)
 
