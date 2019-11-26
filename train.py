@@ -53,7 +53,7 @@ if __name__ == '__main__':
             loss.backward()
 
             cum_loss += loss.item()
-            cum_acc += torch.mean(torch.argmax(score, dim=1) == label)
+            cum_acc += torch.mean((torch.argmax(score, dim=1) == label).float())
 
             optimizer.step()
 
