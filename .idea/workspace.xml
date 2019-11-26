@@ -27,8 +27,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/train.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="197">
-              <caret line="30" column="13" lean-forward="true" selection-start-line="30" selection-start-column="13" selection-end-line="30" selection-end-column="13" />
+            <state relative-caret-position="385">
+              <caret line="57" column="28" lean-forward="true" selection-start-line="57" selection-start-column="28" selection-end-line="57" selection-end-column="28" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
               </folding>
@@ -189,7 +189,21 @@
       <option name="project" value="LOCAL" />
       <updated>1574778821537</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Add the training accuracy">
+      <created>1574789875132</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1574789875132</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Add the training accuracy">
+      <created>1574790137349</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1574790137349</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -225,7 +239,8 @@
     <MESSAGE value="Changed a few lines" />
     <MESSAGE value="Updated the dataset. Changed the batch size and max_len." />
     <MESSAGE value="Used the second element of BERT output, which is the pooler layer." />
-    <option name="LAST_COMMIT_MESSAGE" value="Used the second element of BERT output, which is the pooler layer." />
+    <MESSAGE value="Add the training accuracy" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add the training accuracy" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/environment.yml" />
@@ -250,8 +265,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/train.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="197">
-          <caret line="30" column="13" lean-forward="true" selection-start-line="30" selection-start-column="13" selection-end-line="30" selection-end-column="13" />
+        <state relative-caret-position="385">
+          <caret line="57" column="28" lean-forward="true" selection-start-line="57" selection-start-column="28" selection-end-line="57" selection-end-column="28" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
           </folding>

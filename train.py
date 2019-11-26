@@ -60,6 +60,7 @@ if __name__ == '__main__':
             if (it + 1) % 100 == 0:
                 print('Avg {}-th iteration loss: {} and accuracy: {}'.format(it+1, cum_loss/100, cum_acc/100))
                 cum_loss = 0
+                cum_acc = 0
 
         save_name = './checkpoints/tweet_gpu_checkpoints_lr_{}_epoch_{}.tar'.format(lr, epoch+1)
 
