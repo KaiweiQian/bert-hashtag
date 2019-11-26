@@ -23,9 +23,8 @@ if __name__ == '__main__':
 
     optimizer = Adam(tweet_model.parameters(), lr=1e-5)
 
-    cum_loss = 0
-
     for epoch in range(n_epoch):
+        cum_loss = 0
         train_dataloader = DataLoader(train_data, batch_size=8, shuffle=True)
         print('Epoch {} starts!'.format(epoch+1))
 
