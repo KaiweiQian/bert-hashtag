@@ -1,7 +1,7 @@
 import torch
 
 from util import TweetDataset
-from torch.optim import Adam
+from torch.optim import AdamW
 from torch.nn import CrossEntropyLoss
 from torch.utils.data import DataLoader
 from models import BertHashtag
@@ -29,7 +29,7 @@ if __name__ == '__main__':
     loss_func = CrossEntropyLoss(reduction='mean')
 
     lr = 1e-7
-    optimizer = Adam(tweet_model.parameters(), lr=lr)
+    optimizer = AdamW(tweet_model.parameters(), lr=lr, eps=1e-10)
 
     for epoch in range(n_epoch):
         cum_loss = 0
