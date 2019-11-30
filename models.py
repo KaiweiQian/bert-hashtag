@@ -18,20 +18,3 @@ class BertHashtag(nn.Module):
         score = self.out(pooled)
 
         return score
-
-
-class BertHashtag1(nn.Module):
-    def __init__(self):
-        super(BertHashtag1, self).__init__()
-        self.bert = BertModel.from_pretrained('bert-base-uncased')
-        self.out = nn.Linear(768, 2)
-
-    def forward(self, input_ids, token_type_ids, attn_mask):
-        bert_out = self.bert(input_ids=input_ids,
-                             token_type_ids=token_type_ids,
-                             attention_mask=attn_mask)
-
-        cls_hidden = bert_out[0][:, 0, :]
-        score = self.out(cls_hidden)
-
-        return score
