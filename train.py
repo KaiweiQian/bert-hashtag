@@ -18,7 +18,7 @@ if __name__ == '__main__':
                               meta_path='./data/meta.txt',
                               max_len=64)
 
-    tweet_model = BertHashtag()
+    tweet_model = BertHashtag(num_class=3)
     tweet_model = tweet_model.to(device)
 
     if warm_start:
@@ -28,7 +28,7 @@ if __name__ == '__main__':
 
     loss_func = CrossEntropyLoss(reduction='mean')
 
-    lr = 1e-7
+    lr = 1e-6
     optimizer = AdamW(tweet_model.parameters(), lr=lr, eps=1e-10)
 
     for epoch in range(n_epoch):

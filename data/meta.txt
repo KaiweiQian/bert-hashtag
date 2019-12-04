@@ -1,1 +1,1 @@
-{"AMAs": 0, "SurvivorSeries": 1}
+{"AMAs": 0, "SurvivorSeries": 1, "other": 2}
