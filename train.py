@@ -15,8 +15,8 @@ if __name__ == '__main__':
 
     device = torch.device('cuda:0')
 
-    n_epoch = 4
-    max_len = 8
+    n_epoch = 20
+    max_len = 12
     batch_size = 256
     max_grad_norm = 1000.0
     scheduler_name = 'ExponentialLR'
@@ -80,7 +80,7 @@ if __name__ == '__main__':
 
         train_dataloader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
 
-        if (epoch + 1) % 1 == 0:
+        if (epoch + 1) % 5 == 0:
             save_name = './checkpoints/checkpoints-max_seq_{}-batch_size_{}-lr_{}-schedule_{}-gamma_{}-epoch_{}.tar'.\
                 format(max_len, batch_size, lr, scheduler_name, gamma, epoch + 1)
 
