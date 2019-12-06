@@ -68,7 +68,7 @@ if __name__ == '__main__':
 
             if (it + 1) % 10 == 0:
                 print('Avg {}-th iteration loss: {} and accuracy: {}'.
-                      format(it+1, cum_loss/10, 3, cum_acc/10, 3))
+                      format(it+1, cum_loss/10, cum_acc/10))
                 cum_loss = 0
                 cum_acc = 0
 
