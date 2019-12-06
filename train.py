@@ -18,7 +18,7 @@ if __name__ == '__main__':
     n_epoch = 30
     max_len = 64
     batch_size = 64
-    max_grad_norm = 1.0
+    max_grad_norm = 100.0
     scheduler_name = 'ExponentialLR'
 
     train_data = TweetDataset(file_path='./data/train.txt',
@@ -39,7 +39,7 @@ if __name__ == '__main__':
 
     train_dataloader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
     optimizer = AdamW(tweet_model.parameters(), lr=lr, eps=1e-10)
-    scheduler = ExponentialLR(optimizer, gamma=0.5)
+    scheduler = ExponentialLR(optimizer, gamma=1/4)
 
     for epoch in range(n_epoch):
         cum_loss = 0
