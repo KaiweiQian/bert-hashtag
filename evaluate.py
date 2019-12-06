@@ -10,7 +10,7 @@ if __name__ == '__main__':
     max_len = 32
 
     bert = BertHashtag(num_class=3)
-    bert.load_state_dict(torch.load(model_path))
+    bert.load_state_dict(torch.load(model_path)['model_state_dict'])
 
     dev = TweetDataset('./data/dev.txt', './data/meta.txt', max_len)
 
