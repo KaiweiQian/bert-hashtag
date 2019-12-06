@@ -2,7 +2,7 @@ import torch
 
 from util import TweetDataset
 from transformers.optimization import AdamW
-from torch.optim.lr_scheduler import OneCycleLR
+from torch.optim.lr_scheduler import OneCycleLR, ExponentialLR
 from torch.nn import CrossEntropyLoss
 from torch.nn.utils import clip_grad_norm_
 from torch.utils.data import DataLoader
@@ -19,7 +19,7 @@ if __name__ == '__main__':
     max_len = 64
     batch_size = 64
     max_grad_norm = 1.0
-    scheduler_name = 'OneCycleLR'
+    scheduler_name = 'ExponentialLR'
 
     train_data = TweetDataset(file_path='./data/train.txt',
                               meta_path='./data/meta.txt',
@@ -39,7 +39,7 @@ if __name__ == '__main__':
 
     train_dataloader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
     optimizer = AdamW(tweet_model.parameters(), lr=lr, eps=1e-10, correct_bias=False)
-    scheduler = OneCycleLR(optimizer, max_lr=lr, steps_per_epoch=len(train_dataloader), epochs=n_epoch)
+    scheduler = ExponentialLR(optimizer, gamma=0.5)
 
     for epoch in range(n_epoch):
         cum_loss = 0
@@ -68,7 +68,8 @@ if __name__ == '__main__':
             optimizer.zero_grad()
 
             if (it + 1) % 10 == 0:
-                print('Avg {}-th iteration loss: {} and accuracy: {}'.format(it+1, cum_loss/10, cum_acc/10))
+                print('Avg {}-th iteration loss: {} and accuracy: {}'.
+                      format(it+1, round(cum_loss/10, 3), round(cum_acc/10, 3)))
                 cum_loss = 0
                 cum_acc = 0
 
