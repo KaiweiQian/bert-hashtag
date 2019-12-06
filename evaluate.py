@@ -26,13 +26,16 @@ if __name__ == '__main__':
     y_pred_prob = []
 
     for _, (token_ids, token_type_ids, attn_mask, label) in enumerate(dev_dataloader):
+        token_ids, token_type_ids, attn_mask = token_ids.to(device), token_type_ids.to(device), attn_mask.to(device)
+
         out = bert(input_ids=token_ids,
                    token_type_ids=token_type_ids,
                    attn_mask=attn_mask
                    )
+
         v, k = torch.max(out, -1)
 
-        y_true += label.numpy().cpu().tolist()
+        y_true += label.numpy().tolist()
         y_pred += k.numpy().cpu().tolist()
         y_pred_prob += v.detach().numpy().cpu().tolist()
 
