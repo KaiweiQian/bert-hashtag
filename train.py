@@ -1,7 +1,7 @@
 import torch
 
 from util import TweetDataset
-from torch.optim import AdamW
+from transformers.optimization import AdamW
 from torch.optim.lr_scheduler import OneCycleLR
 from torch.nn import CrossEntropyLoss
 from torch.nn.utils import clip_grad_norm_
