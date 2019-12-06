@@ -35,7 +35,7 @@ if __name__ == '__main__':
 
     loss_func = CrossEntropyLoss(reduction='mean')
 
-    lr = 1e-3
+    lr = 1e-6
 
     train_dataloader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
     optimizer = AdamW(tweet_model.parameters(), lr=lr, eps=1e-10)

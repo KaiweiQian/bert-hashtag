@@ -19,7 +19,7 @@ if __name__ == '__main__':
     dev = dev
 
     bert.eval()
-    dev_dataloader = DataLoader(dev, batch_size=128, shuffle=False)
+    dev_dataloader = DataLoader(dev, batch_size=64, shuffle=False)
 
     y_true = []
     y_pred = []
