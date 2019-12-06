@@ -38,7 +38,7 @@ if __name__ == '__main__':
     lr = 1e-3
 
     train_dataloader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
-    optimizer = AdamW(tweet_model.parameters(), lr=lr, eps=1e-10)
+    optimizer = AdamW(tweet_model.parameters(), lr=lr, eps=1e-10, correct_bias=False)
     scheduler = OneCycleLR(optimizer, max_lr=lr, steps_per_epoch=len(train_dataloader), epochs=n_epoch)
 
     for epoch in range(n_epoch):
