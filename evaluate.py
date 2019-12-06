@@ -6,7 +6,7 @@ from torch.utils.data import DataLoader
 
 
 if __name__ == '__main__':
-    model_path = './checkpoints/tweet_3_class_gpu_checkpoints_lr_1e-07_epoch_20.tar'
+    model_path = './checkpoints/checkpoints-max_seq_8-batch_size_512-lr_0.0001-schedule_ExponentialLR-epoch_5.tar'
     max_len = 32
     device = torch.device('cuda:0')
 
