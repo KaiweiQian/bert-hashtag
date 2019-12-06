@@ -19,7 +19,7 @@ if __name__ == '__main__':
     dev = dev
 
     bert.eval()
-    dev_dataloader = DataLoader(dev, batch_size=512, shuffle=False)
+    dev_dataloader = DataLoader(dev, batch_size=128, shuffle=False)
 
     y_true = []
     y_pred = []
@@ -36,8 +36,8 @@ if __name__ == '__main__':
         v, k = torch.max(out, -1)
 
         y_true += label.numpy().tolist()
-        y_pred += k.numpy().cpu().tolist()
-        y_pred_prob += v.detach().numpy().cpu().tolist()
+        y_pred += k.cpu().numpy().tolist()
+        y_pred_prob += v.detach().cpu().numpy().tolist()
 
     f1 = f1_score(y_true=y_true, y_pred=y_pred, average='macro')
     acc = accuracy_score(y_true=y_true, y_pred=y_pred)
