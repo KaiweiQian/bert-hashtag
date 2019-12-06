@@ -2,7 +2,9 @@ import torch
 
 from util import TweetDataset
 from torch.optim import AdamW
+from torch.optim.lr_scheduler import OneCycleLR
 from torch.nn import CrossEntropyLoss
+from torch.nn.utils import clip_grad_norm_
 from torch.utils.data import DataLoader
 from models import BertHashtag
 
@@ -12,11 +14,16 @@ if __name__ == '__main__':
     PATH = './checkpoints/'
 
     device = torch.device('cuda:0')
-    n_epoch = 20
+
+    n_epoch = 30
+    max_len = 64
+    batch_size = 64
+    max_grad_norm = 1.0
+    scheduler_name = 'OneCycleLR'
 
     train_data = TweetDataset(file_path='./data/train.txt',
                               meta_path='./data/meta.txt',
-                              max_len=64)
+                              max_len=max_len)
 
     tweet_model = BertHashtag(num_class=3)
     tweet_model = tweet_model.to(device)
@@ -28,19 +35,19 @@ if __name__ == '__main__':
 
     loss_func = CrossEntropyLoss(reduction='mean')
 
-    lr = 1e-6
+    lr = 1e-3
+
+    train_dataloader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
     optimizer = AdamW(tweet_model.parameters(), lr=lr, eps=1e-10)
+    scheduler = OneCycleLR(optimizer, max_lr=lr, steps_per_epoch=len(train_dataloader), epochs=n_epoch)
 
     for epoch in range(n_epoch):
         cum_loss = 0
         cum_acc = 0
 
-        train_dataloader = DataLoader(train_data, batch_size=64, shuffle=True)
         print('Epoch {} starts!'.format(epoch+1))
 
         for it, (token_ids, token_type_ids, attn_mask, label) in enumerate(train_dataloader):
-            optimizer.zero_grad()
-
             token_ids, token_type_ids, attn_mask = token_ids.to(device), token_type_ids.to(device), attn_mask.to(device)
             label = label.to(device)
 
@@ -55,16 +62,22 @@ if __name__ == '__main__':
             cum_loss += loss.item()
             cum_acc += torch.mean((torch.argmax(score, dim=1) == label).float())
 
+            clip_grad_norm_(tweet_model.parameters(), max_grad_norm)
             optimizer.step()
+            scheduler.step()
+            optimizer.zero_grad()
 
-            if (it + 1) % 100 == 0:
-                print('Avg {}-th iteration loss: {} and accuracy: {}'.format(it+1, cum_loss/100, cum_acc/100))
+            if (it + 1) % 10 == 0:
+                print('Avg {}-th iteration loss: {} and accuracy: {}'.format(it+1, cum_loss/10, cum_acc/10))
                 cum_loss = 0
                 cum_acc = 0
 
-        save_name = './checkpoints/tweet_gpu_checkpoints_lr_{}_epoch_{}.tar'.format(lr, epoch+1)
+        train_dataloader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
 
         if (epoch + 1) % 5 == 0:
+            save_name = './checkpoints/checkpoints-max_seq_{}-batch_size_{}-lr_{}-schedule_{}-epoch_{}.tar'. \
+                format(max_len, batch_size, lr, scheduler_name, epoch + 1)
+
             torch.save({'epoch': epoch + 1,
                         'model_state_dict': tweet_model.state_dict(),
                         'loss': loss},
