@@ -15,17 +15,17 @@ if __name__ == '__main__':
 
     device = torch.device('cuda:0')
 
-    n_epoch = 30
+    n_epoch = 10
     max_len = 64
     batch_size = 64
-    max_grad_norm = 100.0
+    max_grad_norm = 10.0
     scheduler_name = 'ExponentialLR'
 
     train_data = TweetDataset(file_path='./data/train.txt',
                               meta_path='./data/meta.txt',
                               max_len=max_len)
 
-    tweet_model = BertHashtag(num_class=3)
+    tweet_model = BertHashtag(num_class=3, fix_bert=True)
     tweet_model = tweet_model.to(device)
 
     if warm_start:
@@ -35,7 +35,7 @@ if __name__ == '__main__':
 
     loss_func = CrossEntropyLoss(reduction='mean')
 
-    lr = 1e-3
+    lr = 1e-6
 
     train_dataloader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
     optimizer = AdamW(tweet_model.parameters(), lr=lr, eps=1e-10)
@@ -66,11 +66,14 @@ if __name__ == '__main__':
             optimizer.step()
             optimizer.zero_grad()
 
-            if (it + 1) % 10 == 0:
-                print('Avg {}-th iteration loss: {} and accuracy: {}'.
-                      format(it+1, cum_loss/10, cum_acc/10))
-                cum_loss = 0
-                cum_acc = 0
+            # if (it + 1) % 50 == 0:
+            #    print('Avg {}-th iteration loss: {} and accuracy: {}'.
+            #          format(it+1, cum_loss/50, cum_acc/50))
+            #    cum_loss = 0
+            #    cum_acc = 0
+
+        print('{}-th epoch loss: {} and accuracy: {}'.
+              format(epoch+1, cum_loss/len(train_dataloader), cum_acc/len(train_dataloader)))
 
         scheduler.step()
 

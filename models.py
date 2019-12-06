@@ -4,10 +4,14 @@ from transformers import BertModel
 
 
 class BertHashtag(nn.Module):
-    def __init__(self, num_class=2):
+    def __init__(self, num_class=2, fix_bert=False):
         super(BertHashtag, self).__init__()
         self.bert = BertModel.from_pretrained('bert-base-uncased')
         self.out = nn.Linear(768, num_class)
+
+        if fix_bert:
+            for p in self.bert.parameters():
+                p.requires_grad = False
 
     def forward(self, input_ids, token_type_ids, attn_mask):
         bert_out = self.bert(input_ids=input_ids,
