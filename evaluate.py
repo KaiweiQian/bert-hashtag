@@ -6,8 +6,9 @@ from torch.utils.data import DataLoader
 
 
 if __name__ == '__main__':
-    model_path = './checkpoints/checkpoints-max_seq_8-batch_size_512-lr_0.0001-schedule_ExponentialLR-epoch_5.tar'
-    max_len = 32
+    model_path = './checkpoints/checkpoints-max_seq_12-batch_size_256-' \
+                 'lr_0.0001-schedule_ExponentialLR-gamma_0.8-epoch_20.tar'
+    max_len = 12
     device = torch.device('cuda:0')
 
     bert = BertHashtag(num_class=3)
