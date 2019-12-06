@@ -15,11 +15,12 @@ if __name__ == '__main__':
 
     device = torch.device('cuda:0')
 
-    n_epoch = 10
-    max_len = 32
-    batch_size = 128
-    max_grad_norm = 100.0
+    n_epoch = 4
+    max_len = 8
+    batch_size = 256
+    max_grad_norm = 1000.0
     scheduler_name = 'ExponentialLR'
+    gamma = 0.8
 
     train_data = TweetDataset(file_path='./data/train.txt',
                               meta_path='./data/meta.txt',
@@ -35,11 +36,11 @@ if __name__ == '__main__':
 
     loss_func = CrossEntropyLoss(reduction='mean')
 
-    lr = 1e-6
+    lr = 1e-4
 
     train_dataloader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
     optimizer = AdamW(tweet_model.parameters(), lr=lr, eps=1e-10)
-    scheduler = ExponentialLR(optimizer, gamma=1/2)
+    scheduler = ExponentialLR(optimizer, gamma=gamma)
 
     for epoch in range(n_epoch):
         cum_loss = 0
@@ -79,9 +80,9 @@ if __name__ == '__main__':
 
         train_dataloader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
 
-        if (epoch + 1) % 5 == 0:
-            save_name = './checkpoints/checkpoints-max_seq_{}-batch_size_{}-lr_{}-schedule_{}-epoch_{}.tar'. \
-                format(max_len, batch_size, lr, scheduler_name, epoch + 1)
+        if (epoch + 1) % 1 == 0:
+            save_name = './checkpoints/checkpoints-max_seq_{}-batch_size_{}-lr_{}-schedule_{}-gamma_{}-epoch_{}.tar'.\
+                format(max_len, batch_size, lr, scheduler_name, gamma, epoch + 1)
 
             torch.save({'epoch': epoch + 1,
                         'model_state_dict': tweet_model.state_dict(),

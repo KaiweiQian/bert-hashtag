@@ -1,5 +1,5 @@
 import torch
-from sklearn.metrics import accuracy_score, f1_score, roc_auc_score, confusion_matrix
+from sklearn.metrics import accuracy_score, f1_score, confusion_matrix
 from models import BertHashtag
 from util import TweetDataset
 from torch.utils.data import DataLoader
@@ -43,5 +43,6 @@ if __name__ == '__main__':
     acc = accuracy_score(y_true=y_true, y_pred=y_pred)
     confusion_matrix = confusion_matrix(y_true=y_true, y_pred=y_pred)
 
-    print('f1 score is: {}\naccuracy is: {}\nconfusion maxtrix is:'.format(f1, acc))
+    print('f1 score is: {}\naccuracy is: {}\nconfusion maxtrix is:'.
+          format(round(f1, 3), round(acc, 3)))
     print(confusion_matrix)
