@@ -64,7 +64,6 @@ if __name__ == '__main__':
 
             clip_grad_norm_(tweet_model.parameters(), max_grad_norm)
             optimizer.step()
-            scheduler.step()
             optimizer.zero_grad()
 
             if (it + 1) % 10 == 0:
@@ -72,6 +71,8 @@ if __name__ == '__main__':
                       format(it+1, round(cum_loss/10, 3), round(cum_acc/10, 3)))
                 cum_loss = 0
                 cum_acc = 0
+
+        scheduler.step()
 
         train_dataloader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
 
