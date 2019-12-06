@@ -16,7 +16,7 @@ if __name__ == '__main__':
     bert.load_state_dict(torch.load(model_path)['model_state_dict'])
 
     dev = TweetDataset('./data/dev.txt', './data/meta.txt', max_len)
-    dev = dev.to(device)
+    dev = dev
 
     bert.eval()
     dev_dataloader = DataLoader(dev, batch_size=512, shuffle=False)
