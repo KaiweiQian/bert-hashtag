@@ -19,6 +19,7 @@ if __name__ == '__main__':
     parser.add_argument('--max_len', type=int, default=16)
     parser.add_argument('--batch_size', type=int, default=256)
     parser.add_argument('--max_grad_norm', type=float, default=1000.0)
+    parser.add_argument('--lr', type=float, default=1e-4)
     parser.add_argument('--gamma', type=float, default=0.8)
     args = parser.parse_args()
 
@@ -29,6 +30,7 @@ if __name__ == '__main__':
     max_len = args.max_len
     batch_size = args.batch_size
     max_grad_norm = args.max_grad_norm
+    lr = args.lr
     gamma = args.gamma
 
     scheduler_name = 'ExponentialLR'
@@ -47,8 +49,6 @@ if __name__ == '__main__':
     tweet_model.train()
 
     loss_func = CrossEntropyLoss(reduction='mean')
-
-    lr = 1e-4
 
     train_dataloader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
     optimizer = AdamW(tweet_model.parameters(), lr=lr, eps=1e-10)
