@@ -8,21 +8,22 @@ from torch.utils.data import DataLoader
 
 if __name__ == '__main__':
     model_name = 'max_seq_12-batch_size_256-lr_0.0001-schedule_ExponentialLR-gamma_0.8-epoch_20'
-    model_path = './checkpoints/checkpoints-' + model_name + '.tar'
+    max_len = 12
+    eval_file = 'dev'
 
-    max_len = 16
     device = torch.device('cuda:0')
 
     bert = BertHashtag(num_class=3)
     bert = bert.to(device)
 
+    model_path = './checkpoints/checkpoints-' + model_name + '.tar'
     bert.load_state_dict(torch.load(model_path)['model_state_dict'])
 
-    dev = TweetDataset('./data/dev.txt', './data/meta.txt', max_len)
-    dev = dev
+    eval_path = './data/' + eval_file + '.txt'
+    dev = TweetDataset(eval_path, './data/meta.txt', max_len)
 
     bert.eval()
-    dev_dataloader = DataLoader(dev, batch_size=64, shuffle=False)
+    dev_dataloader = DataLoader(dev, batch_size=48, shuffle=False)
 
     y_true = []
     y_pred = []
@@ -42,7 +43,7 @@ if __name__ == '__main__':
         y_pred += k.cpu().numpy().tolist()
         y_pred_prob += v.detach().cpu().numpy().tolist()
 
-    with open(model_name + 'txt', 'w') as f:
+    with open(eval_file + '-' + model_name + '.txt', 'w') as f:
         json.dump({'y_pred': y_pred, 'y_pred_prob': y_pred_prob}, f)
 
     f1 = f1_score(y_true=y_true, y_pred=y_pred, average='macro')
