@@ -43,7 +43,7 @@ if __name__ == '__main__':
         y_pred += k.cpu().numpy().tolist()
         y_pred_prob += v.detach().cpu().numpy().tolist()
 
-    with open(eval_file + '-' + model_name + '.txt', 'w') as f:
+    with open('./evaluation/' + eval_file + '-' + model_name + '.txt', 'w') as f:
         json.dump({'y_pred': y_pred, 'y_pred_prob': y_pred_prob}, f)
 
     f1 = f1_score(y_true=y_true, y_pred=y_pred, average='macro')

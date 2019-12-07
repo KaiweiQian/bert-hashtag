@@ -4,7 +4,6 @@
     <list default="true" id="3f9264b5-83c5-4239-beb4-6e070c497ba0" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/evaluate.py" beforeDir="false" afterPath="$PROJECT_DIR$/evaluate.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/train.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -46,8 +45,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/evaluate.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="430">
-              <caret line="43" lean-forward="true" selection-start-line="43" selection-end-line="43" />
+            <state relative-caret-position="415">
+              <caret line="41" column="40" lean-forward="true" selection-start-line="41" selection-start-column="40" selection-end-line="41" selection-end-column="40" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
               </folding>
@@ -426,7 +425,21 @@
       <option name="project" value="LOCAL" />
       <updated>1575668034384</updated>
     </task>
-    <option name="localTasksCounter" value="41" />
+    <task id="LOCAL-00041" summary="Updated the evaluation file and adjust the hyperparameter to the best one.">
+      <created>1575678044477</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1575678044477</updated>
+    </task>
+    <task id="LOCAL-00042" summary="Updated the evaluation file and adjust the hyperparameter to the best one.">
+      <created>1575678365065</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1575678365065</updated>
+    </task>
+    <option name="localTasksCounter" value="43" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -471,7 +484,8 @@
     <MESSAGE value="Added an option to the model.py to allow set gradients of parameters in the BERT model to 0." />
     <MESSAGE value="Updated some hyperparameters." />
     <MESSAGE value="Added a file to evaluate the model on development set." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added a file to evaluate the model on development set." />
+    <MESSAGE value="Updated the evaluation file and adjust the hyperparameter to the best one." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated the evaluation file and adjust the hyperparameter to the best one." />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/environment.yml" />
@@ -517,8 +531,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/evaluate.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="430">
-          <caret line="43" lean-forward="true" selection-start-line="43" selection-end-line="43" />
+        <state relative-caret-position="415">
+          <caret line="41" column="40" lean-forward="true" selection-start-line="41" selection-start-column="40" selection-end-line="41" selection-end-column="40" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
           </folding>
