@@ -1,4 +1,5 @@
 import torch
+import argparse
 
 from util import TweetDataset
 from torch.optim import AdamW
@@ -10,17 +11,28 @@ from models import BertHashtag
 
 
 if __name__ == '__main__':
-    warm_start = False
-    PATH = './checkpoints/'
+    parser = argparse.ArgumentParser(description='Hyper-parameters required.')
+    parser.add_argument('--warm_start', type=bool, default=False)
+    parser.add_argument('--save_path', type=str, default='./checkpoints/')
+    parser.add_argument('--n_epoch', type=int, default=5)
+    parser.add_argument('--epoch_per_save', type=int, default=1)
+    parser.add_argument('--max_len', type=int, default=16)
+    parser.add_argument('--batch_size', type=int, default=256)
+    parser.add_argument('--max_grad_norm', type=float, default=1000.0)
+    parser.add_argument('--gamma', type=float, default=0.8)
+    args = parser.parse_args()
 
-    device = torch.device('cuda:0')
+    warm_start = args.warm_start
+    save_path = args.save_path
+    n_epoch = args.n_epoch
+    epoch_per_save = args.epoch_per_save
+    max_len = args.max_len
+    batch_size = args.batch_size
+    max_grad_norm = args.max_grad_norm
+    gamma = args.gamma
 
-    n_epoch = 5
-    max_len = 16
-    batch_size = 256
-    max_grad_norm = 1000.0
     scheduler_name = 'ExponentialLR'
-    gamma = 0.8
+    device = torch.device('cuda:0')
 
     train_data = TweetDataset(file_path='./data/train.txt',
                               meta_path='./data/meta.txt',
@@ -30,7 +42,7 @@ if __name__ == '__main__':
     tweet_model = tweet_model.to(device)
 
     if warm_start:
-        tweet_model.load_state_dict(torch.load(PATH)['model_state_dict'])
+        tweet_model.load_state_dict(torch.load(save_path)['model_state_dict'])
 
     tweet_model.train()
 
@@ -80,8 +92,8 @@ if __name__ == '__main__':
 
         train_dataloader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
 
-        if (epoch + 1) % 1 == 0:
-            save_name = './checkpoints/checkpoints-max_seq_{}-batch_size_{}-lr_{}-schedule_{}-gamma_{}-epoch_{}.tar'.\
+        if (epoch + 1) % epoch_per_save == 0:
+            save_name = save_path + 'checkpoints-max_seq_{}-batch_size_{}-lr_{}-schedule_{}-gamma_{}-epoch_{}.tar'.\
                 format(max_len, batch_size, lr, scheduler_name, gamma, epoch + 1)
 
             torch.save({'epoch': epoch + 1,

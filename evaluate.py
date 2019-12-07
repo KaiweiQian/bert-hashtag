@@ -1,5 +1,7 @@
 import torch
+import argparse
 import json
+
 from sklearn.metrics import accuracy_score, f1_score, confusion_matrix
 from models import BertHashtag
 from util import TweetDataset
@@ -7,23 +9,33 @@ from torch.utils.data import DataLoader
 
 
 if __name__ == '__main__':
-    model_name = 'max_seq_12-batch_size_256-lr_0.0001-schedule_ExponentialLR-gamma_0.8-epoch_20'
-    max_len = 12
-    eval_file = 'dev'
+    parser = argparse.ArgumentParser(description='Hyper-parameters required.')
+    parser.add_argument('--save_path', type=str, default='./checkpoints/')
+    parser.add_argument('--model_file', type=str, default=None)
+    parser.add_argument('--eval_file', type=str, default='dev')
+    parser.add_argument('--max_len', type=int, default=16)
+    parser.add_argument('--batch_size', type=int, default=48)
+    args = parser.parse_args()
+
+    save_path = args.save_path
+    model_file = args.model_file
+    eval_file = args.eval_file
+    max_len = args.max_len
+    batch_size = args.batch_size
 
     device = torch.device('cuda:0')
 
     bert = BertHashtag(num_class=3)
     bert = bert.to(device)
+    bert.eval()
 
-    model_path = './checkpoints/checkpoints-' + model_name + '.tar'
+    model_path = save_path + model_file
     bert.load_state_dict(torch.load(model_path)['model_state_dict'])
 
     eval_path = './data/' + eval_file + '.txt'
     dev = TweetDataset(eval_path, './data/meta.txt', max_len)
 
-    bert.eval()
-    dev_dataloader = DataLoader(dev, batch_size=48, shuffle=False)
+    dev_dataloader = DataLoader(dev, batch_size=batch_size, shuffle=False)
 
     y_true = []
     y_pred = []
@@ -43,7 +55,7 @@ if __name__ == '__main__':
         y_pred += k.cpu().numpy().tolist()
         y_pred_prob += v.detach().cpu().numpy().tolist()
 
-    with open('./evaluation/' + eval_file + '-' + model_name + '.txt', 'w') as f:
+    with open('./evaluation/' + eval_file + '-' + model_file + '.txt', 'w') as f:
         json.dump({'y_pred': y_pred, 'y_pred_prob': y_pred_prob}, f)
 
     f1 = f1_score(y_true=y_true, y_pred=y_pred, average='macro')
