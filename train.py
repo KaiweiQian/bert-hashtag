@@ -2,7 +2,7 @@ import torch
 
 from util import TweetDataset
 from torch.optim import AdamW
-from torch.optim.lr_scheduler import OneCycleLR, ExponentialLR
+from torch.optim.lr_scheduler import ExponentialLR
 from torch.nn import CrossEntropyLoss
 from torch.nn.utils import clip_grad_norm_
 from torch.utils.data import DataLoader
@@ -16,7 +16,7 @@ if __name__ == '__main__':
     device = torch.device('cuda:0')
 
     n_epoch = 5
-    max_len = 12
+    max_len = 16
     batch_size = 256
     max_grad_norm = 1000.0
     scheduler_name = 'ExponentialLR'

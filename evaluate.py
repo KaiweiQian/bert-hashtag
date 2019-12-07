@@ -1,4 +1,5 @@
 import torch
+import json
 from sklearn.metrics import accuracy_score, f1_score, confusion_matrix
 from models import BertHashtag
 from util import TweetDataset
@@ -6,9 +7,10 @@ from torch.utils.data import DataLoader
 
 
 if __name__ == '__main__':
-    model_path = './checkpoints/checkpoints-max_seq_12-batch_size_256-' \
-                 'lr_0.0001-schedule_ExponentialLR-gamma_0.8-epoch_20.tar'
-    max_len = 12
+    model_name = 'max_seq_12-batch_size_256-lr_0.0001-schedule_ExponentialLR-gamma_0.8-epoch_20'
+    model_path = './checkpoints/checkpoints-' + model_name + '.tar'
+
+    max_len = 16
     device = torch.device('cuda:0')
 
     bert = BertHashtag(num_class=3)
@@ -39,6 +41,9 @@ if __name__ == '__main__':
         y_true += label.numpy().tolist()
         y_pred += k.cpu().numpy().tolist()
         y_pred_prob += v.detach().cpu().numpy().tolist()
+
+    with open(model_name + 'txt', 'w') as f:
+        json.dump({'y_pred': y_pred, 'y_pred_prob': y_pred_prob}, f)
 
     f1 = f1_score(y_true=y_true, y_pred=y_pred, average='macro')
     acc = accuracy_score(y_true=y_true, y_pred=y_pred)
